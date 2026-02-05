@@ -1,0 +1,16 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  # Scrape Prometheus itself
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["prometheus:9090"]
+
+  # If you enable Node Exporter in docker-compose with network_mode: host,
+  # and Prometheus runs in bridge network, you can scrape it via the host IP:
+  # Replace <HOST_PRIVATE_IP> with the EC2 instance's private IP (or 127.0.0.1 if host networking).
+  - job_name: "node"
+    static_configs:
+      - targets: ["<HOST_PRIVATE_IP>:9100"] #as the node exporter is running on host network, so give host IP

@@ -1,0 +1,63 @@
+networks:
+  monitoring:
+    driver: bridge
+
+volumes:
+  prometheus-data:
+  grafana-data:
+
+services:
+  prometheus:
+    image: prom/prometheus:v2.52.0
+    container_name: prometheus
+    restart: unless-stopped
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      # Retention can be tuned; for a short run you can keep it small:
+      - "--storage.tsdb.retention.time=24h"
+      # Reduce WAL compression CPU for tiny instances by disabling it (optional):
+      # - "--no-storage.tsdb.wal-compression"
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana-oss:10.4.2
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      # Set your own admin password here or via env/secret manager
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      # Persist plugins & provisioning inside the volume
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+    volumes:
+      - grafana-data:/var/lib/grafana
+      # If you want to auto-provision datasources/dashboards later, mount them here:
+      # - ./grafana/provisioning:/etc/grafana/provisioning
+    depends_on:
+      - prometheus
+    networks:
+      - monitoring
+
+  # (Optional) Node Exporter to collect host metrics from the EC2 itself.
+  # Requires --pid=host and a mount of /proc—safe for single-host monitoring.
+  # If you enable this, add its target to prometheus.yml too.
+  node-exporter:
+    image: quay.io/prometheus/node-exporter:v1.8.1
+    container_name: node-exporter
+    restart: unless-stopped
+    pid: "host"
+    network_mode: "host"
+    command:
+      - "--path.rootfs=/host"
+    volumes:
+      - "/:/host:ro,rslave"
+  #   # Exposes 9100 on the host (because network_mode: host)
+  #   # Security groups must allow 9100 if Prometheus scrapes from outside host
