@@ -1,6 +1,6 @@
 
-**Use case:** quick POCs, short-lived environments, or small hosts.  
-**Tested on:** Amazon Linux 2 / Amazon Linux 2023; works on **t4g.micro (ARM64)** and **t3.micro (x86)**.
+**Use case:** quick POCs, short-lived environments
+**Tested on:** Amazon Linux 2 / Amazon Linux 2023 t2.micro; works on **t4g.micro (ARM64)** and **t3.micro (x86)**.
 
 
 ## 🧱 Prerequisites
@@ -20,18 +20,20 @@
     └─ prometheus.yml
 
 
-## step by step:
+## Steps to run this:
 
-    install docker and docker compose in the linux server
-    modify the prometheus.yaml node exporter target IP with private IP of instance
-    run the tools using:
-        docker compose up -d
-        docker ps
+  install docker and docker compose in the linux server
+  modify the prometheus.yaml node exporter target IP with private IP of instance
+  run the tools using:
+      docker compose up -d
+      docker ps
 
-    Access the prometheus and check the target health
-    
-    Access the Grafana(check the compose file for user and password) and add the prometheus data source
+  Access the prometheus and check the target health
+  <img width="1920" height="809" alt="image" src="https://github.com/user-attachments/assets/7a91495a-1e7b-40b7-90f5-c99f46d5dc0b" />
 
-    Add node exporter dashboard, Node Exporter Full (ID: 1860)
+  
+  Access the Grafana(check the compose file for user and password) and add the prometheus data source
+  Add node exporter dashboard, Node Exporter Full (ID: 1860)
 
-    Access the node exporter dashboard
+  Access the node exporter dashboard
+  <img width="1920" height="955" alt="image" src="https://github.com/user-attachments/assets/8873224c-ca7c-451b-b1b6-ebb7aaca8cae" />
