@@ -1,6 +1,7 @@
 
 **Use case:** quick POCs, short-lived environments
-**Tested on:** Amazon Linux 2 / Amazon Linux 2023 t2.micro; works on **t4g.micro (ARM64)** and **t3.micro (x86)**.
+
+**Tested on:** Amazon Linux 2 / Amazon Linux 2023 t2.micro
 
 
 ## 🧱 Prerequisites
